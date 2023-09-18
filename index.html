@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shortest Distance Map with Leaflet Routing Machine</title>
+    <!-- Include Leaflet CSS and JavaScript -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <!-- Include Leaflet Routing Machine CSS and JavaScript -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
+    <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+</head>
+<body>
+    <h1>Shortest Distance Map with Leaflet Routing Machine</h1>
+    
+    <div>
+        <label for="origin">Origin Coordinates (Lat, Long):</label>
+        <input type="text" id="origin" placeholder="e.g., 40.7128, -74.0060">
+    </div>
+    
+    <div>
+        <label for="destination">Destination Coordinates (Lat, Long):</label>
+        <input type="text" id="destination" placeholder="e.g., 34.0522, -118.2437">
+    </div>
+
+    <button onclick="calculateRoute()">Calculate Route</button>
+
+    <div id="map" style="height: 400px;"></div>
+
+    <script>
+        var map = L.map('map').setView([0, 0], 2); // Initial map view
+        var routingControl;
+
+        // Add a tile layer (you can use different map providers)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        function calculateRoute() {
+            var originInput = document.getElementById('origin').value;
+            var destinationInput = document.getElementById('destination').value;
+
+            var originCoordinates = originInput.split(',').map(Number);
+            var destinationCoordinates = destinationInput.split(',').map(Number);
+
+            // Remove previous route control
+            if (routingControl) {
+                map.removeControl(routingControl);
+            }
+
+            // Create a routing control
+            routingControl = L.Routing.control({
+                waypoints: [
+                    L.latLng(originCoordinates),
+                    L.latLng(destinationCoordinates)
+                ],
+                routeWhileDragging: true // Allow route to be updated while dragging waypoints
+            }).addTo(map);
+        }
+    </script>
+</body>
+</html>
